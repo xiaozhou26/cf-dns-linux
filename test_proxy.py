@@ -170,6 +170,6 @@ def main():
 
 if __name__=="__main__":
     main()
-    print("10秒后自动退出程序")
-    time.sleep(10)
+    print("3秒后自动退出程序")
+    time.sleep(3)
     

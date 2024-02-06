@@ -11,11 +11,24 @@ os.environ.pop("HTTPS_PROXY", None)
 os.environ.pop("http_proxy", None)
 os.environ.pop("https_proxy", None)
 
+def fetch_ips(): 
+    response = requests.get('https://ipdb.api.030101.xyz/?type=cfv4;proxy')
+
+# 检查响应状态码
+    if response.status_code == 200:
+    # 将返回的IP保存为hero.txt
+        with open('hero.txt', 'w') as file:
+            file.write(response.text)
+    else:
+        print(f"请求失败，状态码：{response.status_code}")
+    
+
+
 
 # Part3.生成result.csv
 def run_cloudflare_speedtest():
     print("测速并生成result.csv...")
-    subprocess.run(["/root/speed/test1.sh"], shell=True)
+    subprocess.run(["./hero.sh"], shell=True)
 
     print("测速完成，生成result.csv文件")
 
@@ -31,7 +44,7 @@ def get_ips():  # 读取result.csv文件中的IPs
 
 # Part4.更新Cloudflare DNS记录
 def load_config(): # 读取config.json文件
-    with open("/root/speed//config/config.json", "r", encoding="utf-8") as file:
+    with open("./config/config.json", "r", encoding="utf-8") as file:
         config = json.load(file)
         email = config.get("email")
         global_api_key = config.get("global_api_key")
@@ -75,7 +88,8 @@ def update_cloudflare_dns(email, global_api_key, zone_id, domains):
     return res_domains  # 返回未更新的域名
 
 def main():
-    print("开始筛选...")
+    fetch_ips()
+    print("中转节点下载完成，开始筛选...")
     run_cloudflare_speedtest()  # 生成result.csv文件
 
     email, global_api_key, zone_id, domains = load_config() # 读取config.json文件
@@ -90,6 +104,6 @@ def main():
 
 if __name__=="__main__":
     main()
-    print("10秒后自动退出程序")
-    time.sleep(10)
+    print("3秒后自动退出程序")
+    time.sleep(3)
     
